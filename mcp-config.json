@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "star-mcp": {
+      "type": "streamable_http",
+      "url": "https://mcp.api-inference.modelscope.net/7dbabf61999f4e/mcp"
+    }
+  }
+}
