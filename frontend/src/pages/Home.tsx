@@ -53,7 +53,7 @@ const Home: React.FC = () => {
         <p>后端服务已启动：</p>
         <ul>
           <li><a href="http://localhost:3001/health" target="_blank">后端网关健康检查</a></li>
-          <li><a href="http://localhost:3001/api/v1/horoscope/signs" target="_blank">星座列表API</a></li>
+          <li><a href="http://localhost:3001/api/horoscope/signs" target="_blank">星座列表API</a></li>
         </ul>
       </div>
     </div>

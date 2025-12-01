@@ -12,18 +12,6 @@
   ],
   "routes": [
     {
-      "src": "/api/v1/horoscope/chat/session",
-      "dest": "https://ai-xingzuo-website-production.up.railway.app/api/v1/horoscope/chat/session"
-    },
-    {
-      "src": "/api/v1/horoscope/chat/(.*)",
-      "dest": "https://ai-xingzuo-website-production.up.railway.app/api/v1/horoscope/chat/$1"
-    },
-    {
-      "src": "/api/v1/horoscope/(.*)",
-      "dest": "https://ai-xingzuo-website-production.up.railway.app/api/v1/horoscope/$1"
-    },
-    {
       "src": "/api/(.*)",
       "dest": "https://ai-xingzuo-website-production.up.railway.app/api/$1"
     },

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API 测试页面</title>
+</head>
+<body>
+    <h1>API 测试页面</h1>
+    <p>测试 Vercel 路由配置是否正确</p>
+    
+    <button onclick="testAPI()">测试 API 调用</button>
+    <div id="result"></div>
+    
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '正在测试...';
+            
+            try {
+                // 测试直接调用 Railway API
+                const response1 = await fetch('https://ai-xingzuo-website-production.up.railway.app/api/v1/horoscope/signs');
+                resultDiv.innerHTML += `<p>✅ Railway API 正常: ${response1.status}</p>`;
+                
+                // 测试通过 Vercel 代理调用
+                const response2 = await fetch('/api/v1/horoscope/signs');
+                resultDiv.innerHTML += `<p>✅ Vercel 代理: ${response2.status}</p>`;
+                
+                // 测试聊天 API
+                const response3 = await fetch('https://ai-xingzuo-website-production.up.railway.app/api/v1/horoscope/chat/session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                resultDiv.innerHTML += `<p>✅ Railway 聊天 API: ${response3.status}</p>`;
+                
+            } catch (error) {
+                resultDiv.innerHTML += `<p>❌ 测试失败: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
