@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试当前部署</title>
+</head>
+<body>
+    <h1>测试当前部署状态</h1>
+    <p>这个页面会测试当前部署的前端代码</p>
+    
+    <div>
+        <h3>1. 检查 API 配置</h3>
+        <button onclick="checkAPIConfig()">检查 API 配置</button>
+        <div id="api-config"></div>
+    </div>
+    
+    <div>
+        <h3>2. 测试 API 调用</h3>
+        <button onclick="testAPICall()">测试 API 调用</button>
+        <div id="api-call"></div>
+    </div>
+    
+    <script>
+        async function checkAPIConfig() {
+            const resultDiv = document.getElementById('api-config');
+            resultDiv.innerHTML = '正在检查 API 配置...';
+            
+            try {
+                // 检查当前页面的 API 配置
+                // 由于我们直接使用 Railway URL，这里应该能正常工作
+                const response = await fetch('https://ai-xingzuo-website-production.up.railway.app/api/v1/horoscope/chat/session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `<p>✅ API 配置正确: ${response.status}</p>`;
+                    resultDiv.innerHTML += `<p>Session ID: ${data.sessionId}</p>`;
+                    resultDiv.innerHTML += `<p>Message: ${data.message}</p>`;
+                } else {
+                    resultDiv.innerHTML = `<p>❌ API 配置错误: ${response.status}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p>❌ API 配置检查失败: ${error.message}</p>`;
+            }
+        }
+        
+        async function testAPICall() {
+            const resultDiv = document.getElementById('api-call');
+            resultDiv.innerHTML = '正在测试 API 调用...';
+            
+            try {
+                // 模拟前端代码中的 API 调用
+                const response = await fetch('https://ai-xingzuo-website-production.up.railway.app/api/v1/horoscope/chat/session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `<p>✅ API 调用成功: ${response.status}</p>`;
+                    resultDiv.innerHTML += `<p>Session ID: ${data.sessionId}</p>`;
+                    resultDiv.innerHTML += `<p>Message: ${data.message}</p>`;
+                } else {
+                    resultDiv.innerHTML = `<p>❌ API 调用失败: ${response.status}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p>❌ API 调用失败: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
