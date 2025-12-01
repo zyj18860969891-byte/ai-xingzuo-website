@@ -55,7 +55,8 @@ const ChatInterface: React.FC = () => {
 
   const initializeSession = async () => {
     try {
-      const response = await axios.post('/api/v1/horoscope/chat/session');
+      const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api/v1';
+      const response = await axios.post(`${apiBaseUrl}/horoscope/chat/session`);
       setSessionId(response.data.sessionId);
       
       // 添加欢迎消息
@@ -93,7 +94,8 @@ const ChatInterface: React.FC = () => {
     setIsTyping(true);
 
     try {
-      const response = await axios.post('/api/v1/horoscope/chat/analyze', {
+      const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api/v1';
+      const response = await axios.post(`${apiBaseUrl}/horoscope/chat/analyze`, {
         sessionId,
         question: message,
         timestamp: new Date().toISOString()
@@ -156,9 +158,11 @@ const ChatInterface: React.FC = () => {
     console.log('用户选择了星座:', zodiac);
     
     try {
+      const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '/api/v1';
+      
       // 首先保存星座信息到会话
       if (sessionId) {
-        await axios.post('/api/v1/horoscope/chat/set-zodiac', {
+        await axios.post(`${apiBaseUrl}/horoscope/chat/set-zodiac`, {
           sessionId: sessionId,
           zodiac: zodiac
         });
@@ -166,7 +170,7 @@ const ChatInterface: React.FC = () => {
       }
       
       // 然后发送星座查询请求
-      const response = await axios.post('/api/v1/horoscope/chat/analyze', {
+      const response = await axios.post(`${apiBaseUrl}/horoscope/chat/analyze`, {
         sessionId: sessionId || 'default-session',
         question: `我的星座是${zodiac}`,
         timestamp: new Date().toISOString()
