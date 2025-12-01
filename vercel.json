@@ -12,10 +12,6 @@
   ],
   "routes": [
     {
-      "src": "/api/v1/(.*)",
-      "dest": "https://ai-xingzuo-website-production.up.railway.app/api/v1/$1"
-    },
-    {
       "src": "/api/(.*)",
       "dest": "https://ai-xingzuo-website-production.up.railway.app/api/$1"
     },
