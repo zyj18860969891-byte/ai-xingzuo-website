@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node backend/server.js",
     "start-services": "concurrently \"npm start\" \"npm run start-mcp\"",
-    "start-mcp": "node services/horoscope/server.js",
+    "start-mcp": "HOROSCOPE_SERVICE_PORT=8080 node services/horoscope/server.js",
     "dev": "concurrently \"npm run dev:gateway\" \"npm run dev:services\"",
     "dev:gateway": "cd backend && npm run dev",
     "dev:services": "cd services && npm run dev",

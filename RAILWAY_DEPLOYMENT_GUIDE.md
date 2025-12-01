@@ -16,11 +16,11 @@
 ```
 Railway Container
 ├── Gateway Service (backend)
-│   ├── 端口: 8080 (对外)
+│   ├── 端口: 3001 (容器内)
 │   ├── 启动: npm start
 │   └── 功能: API 网关、路由、负载均衡
 └── Horoscope Service (services/horoscope)
-    ├── 端口: 3002 (容器内)
+    ├── 端口: 8080 (对外)
     ├── 启动: npm run start-mcp
     └── 功能: 星座运势服务
 ```
@@ -30,8 +30,14 @@ Railway Container
 npm run start-services
 ```
 这会同时运行：
-- `npm start` - 启动 Gateway 服务
-- `npm run start-mcp` - 启动 Horoscope 服务
+- `npm start` - 启动 Gateway 服务 (端口 3001)
+- `npm run start-mcp` - 启动 Horoscope 服务 (端口 8080)
+
+### 端口说明
+- **对外端口**: 8080 (Railway 统一端口)
+- **Gateway 服务**: 3001 (容器内)
+- **Horoscope 服务**: 8080 (对外服务端口)
+- **服务间通信**: 通过 localhost 和不同端口进行
 
 ## 配置文件
 
@@ -124,15 +130,15 @@ app.listen(PORT, () => {
 ```bash
 NODE_ENV=production
 PORT=8080
-GATEWAY_PORT=8080
-HOROSCOPE_SERVICE_PORT=3002
+GATEWAY_PORT=3001
+HOROSCOPE_SERVICE_PORT=8080
 ZODIAC_SERVICE_PORT=3003
 COMPATIBILITY_SERVICE_PORT=3004
 AI_SERVICE_PORT=3005
 MODELSCOPE_API_KEY=your-api-key-here
 MODELSCOPE_MODEL=Qwen/Qwen3-235B-Instruct-2507
 MODELSCOPE_BASE_URL=https://api-inference.modelscope.cn/v1
-HOROSCOPE_MCP_URL=http://localhost:3002
+HOROSCOPE_MCP_URL=http://localhost:8080
 ZODIAC_MCP_URL=http://localhost:3003
 COMPATIBILITY_MCP_URL=http://localhost:3004
 AI_MCP_URL=http://localhost:3005
@@ -148,6 +154,12 @@ TRANSLATION_API_ENABLED=true
 LIBRE_TRANSLATE_URL=https://libretranslate.de/translate
 GOOGLE_TRANSLATE_URL=https://translate.googleapis.com/translate_a/single
 ```
+
+### 端口配置说明
+- **PORT=8080**: Railway 对外端口
+- **GATEWAY_PORT=3001**: Gateway 服务容器内端口
+- **HOROSCOPE_SERVICE_PORT=8080**: Horoscope 服务对外端口
+- **HOROSCOPE_MCP_URL=http://localhost:8080**: Gateway 访问 Horoscope 服务的地址
 
 ## 优势
 
@@ -212,6 +224,9 @@ Railway 会自动：
 ### 常见问题
 1. **服务启动失败**：检查日志确认错误
 2. **端口冲突**：确保服务使用不同端口
+   - Gateway 服务使用 3001 端口
+   - Horoscope 服务使用 8080 端口
+   - 检查环境变量配置是否正确
 3. **环境变量缺失**：检查 Railway 环境变量配置
 4. **依赖问题**：确保所有依赖正确安装
 
@@ -220,3 +235,10 @@ Railway 会自动：
 2. 检查容器启动状态
 3. 验证环境变量配置
 4. 测试服务间通信
+
+### 端口冲突解决方案
+如果遇到 "EADDRINUSE: address already in use" 错误：
+1. 检查 `railway.toml` 中的端口配置
+2. 确认 `Dockerfile` 中的环境变量设置
+3. 验证 `package.json` 中的启动脚本
+4. 确保 Gateway 和 Horoscope 服务使用不同端口
