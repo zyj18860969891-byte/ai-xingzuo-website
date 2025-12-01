@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // API基础配置
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'https://ai-xingzuo-website-production.up.railway.app/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
