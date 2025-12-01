@@ -3,7 +3,7 @@
   "name": "ai-horoscope-frontend",
   "builds": [
     {
-      "src": "frontend/vite.config.ts",
+      "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist"
@@ -22,6 +22,5 @@
   ],
   "env": {
     "REACT_APP_API_BASE_URL": "https://your-railway-project-id.railway.app/api"
-  },
-  "outputDirectory": "frontend/dist"
+  }
 }
