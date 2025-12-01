@@ -1,0 +1,48 @@
+[build]
+builder = "DOCKERFILE"
+
+[deploy]
+startCommand = "npm run start-services"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[build.docker]
+buildContext = "."
+dockerfilePath = "Dockerfile"
+
+[build.environment]
+NIXPACKS_NODE = "18"
+
+[environments.production]
+NODE_ENV = "production"
+PORT = 8080
+GATEWAY_PORT = 8080
+HOROSCOPE_SERVICE_PORT = 3002
+ZODIAC_SERVICE_PORT = 3003
+COMPATIBILITY_SERVICE_PORT = 3004
+AI_SERVICE_PORT = 3005
+MODELSCOPE_API_KEY = "your-key-here"
+MODELSCOPE_MODEL = "Qwen/Qwen3-235B-Instruct-2507"
+MODELSCOPE_BASE_URL = "https://api-inference.modelscope.cn/v1"
+HOROSCOPE_MCP_URL = "http://localhost:3002"
+ZODIAC_MCP_URL = "http://localhost:3003"
+COMPATIBILITY_MCP_URL = "http://localhost:3004"
+AI_MCP_URL = "http://localhost:3005"
+HOROSCOPE_MCP_TIMEOUT = "15000"
+ZODIAC_MCP_TIMEOUT = "15000"
+COMPATIBILITY_MCP_TIMEOUT = "15000"
+AI_MCP_TIMEOUT = "15000"
+HOROSCOPE_LANGUAGE = "zh"
+HOROSCOPE_CACHE_ENABLED = "true"
+HOROSCOPE_SESSION_TIMEOUT = "3600000"
+HOROSCOPE_READING_TYPE = "single"
+# 翻译系统配置
+TRANSLATION_API_ENABLED = "true"
+LIBRE_TRANSLATE_URL = "https://libretranslate.de/translate"
+GOOGLE_TRANSLATE_URL = "https://translate.googleapis.com/translate_a/single"
+
+[healthcheck]
+healthcheckPath = "/health"
+healthcheckTimeout = 60
+healthcheckInterval = 15
+healthcheckUnhealthyThreshold = 2
