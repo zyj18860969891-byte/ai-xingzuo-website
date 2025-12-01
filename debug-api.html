@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API 调试页面</title>
+</head>
+<body>
+    <h1>API 调试页面</h1>
+    <p>测试各种 API 调用方式</p>
+    
+    <div>
+        <h3>1. 直接调用 Railway API</h3>
+        <button onclick="testDirectRailway()">测试直接 Railway API</button>
+        <div id="direct-result"></div>
+    </div>
+    
+    <div>
+        <h3>2. 测试前端 API 配置</h3>
+        <button onclick="testFrontendAPI()">测试前端 API 配置</button>
+        <div id="frontend-result"></div>
+    </div>
+    
+    <div>
+        <h3>3. 测试 Vercel 代理</h3>
+        <button onclick="testVercelProxy()">测试 Vercel 代理</button>
+        <div id="proxy-result"></div>
+    </div>
+    
+    <script>
+        async function testDirectRailway() {
+            const resultDiv = document.getElementById('direct-result');
+            resultDiv.innerHTML = '正在测试直接 Railway API...';
+            
+            try {
+                const response = await fetch('https://ai-xingzuo-website-production.up.railway.app/api/v1/horoscope/chat/session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                resultDiv.innerHTML = `<p>✅ 直接 Railway API 成功: ${response.status}</p>`;
+                resultDiv.innerHTML += `<p>Session ID: ${data.sessionId}</p>`;
+                resultDiv.innerHTML += `<p>Message: ${data.message}</p>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<p>❌ 直接 Railway API 失败: ${error.message}</p>`;
+            }
+        }
+        
+        async function testFrontendAPI() {
+            const resultDiv = document.getElementById('frontend-result');
+            resultDiv.innerHTML = '正在测试前端 API 配置...';
+            
+            try {
+                // 模拟前端 API 调用
+                const response = await fetch('https://ai-xingzuo-website-production.up.railway.app/api/v1/horoscope/chat/session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                resultDiv.innerHTML = `<p>✅ 前端 API 配置成功: ${response.status}</p>`;
+                resultDiv.innerHTML += `<p>Session ID: ${data.sessionId}</p>`;
+                resultDiv.innerHTML += `<p>Message: ${data.message}</p>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<p>❌ 前端 API 配置失败: ${error.message}</p>`;
+            }
+        }
+        
+        async function testVercelProxy() {
+            const resultDiv = document.getElementById('proxy-result');
+            resultDiv.innerHTML = '正在测试 Vercel 代理...';
+            
+            try {
+                const response = await fetch('/api/v1/horoscope/chat/session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                resultDiv.innerHTML = `<p>✅ Vercel 代理成功: ${response.status}</p>`;
+                resultDiv.innerHTML += `<p>Session ID: ${data.sessionId}</p>`;
+                resultDiv.innerHTML += `<p>Message: ${data.message}</p>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<p>❌ Vercel 代理失败: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
