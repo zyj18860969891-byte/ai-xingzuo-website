@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API 修复测试</title>
+</head>
+<body>
+    <h1>API 修复测试页面</h1>
+    <p>测试直接连接 Railway 后端的 API 调用</p>
+    
+    <button onclick="testAPI()">测试 API 调用</button>
+    <div id="result"></div>
+    
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '正在测试...';
+            
+            try {
+                // 测试直接调用 Railway API
+                const response1 = await fetch('https://ai-xingzuo-website-production.up.railway.app/api/v1/horoscope/chat/session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data1 = await response1.json();
+                resultDiv.innerHTML += `<p>✅ Railway API 正常: ${response1.status} - Session ID: ${data1.sessionId}</p>`;
+                
+                // 测试前端页面中的 API 调用（模拟）
+                resultDiv.innerHTML += `<p>🔄 前端应该已经配置为直接连接 Railway 后端</p>`;
+                resultDiv.innerHTML += `<p>📝 请刷新浏览器页面并测试聊天功能</p>`;
+                
+            } catch (error) {
+                resultDiv.innerHTML += `<p>❌ 测试失败: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
