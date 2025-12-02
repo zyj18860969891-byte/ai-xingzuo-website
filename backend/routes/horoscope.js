@@ -33,7 +33,7 @@ const validateRequest = (req, res, next) => {
  */
 router.get('/signs', async (req, res) => {
   try {
-    const response = await axios.get(`${SERVICE_URL}/api/v1/horoscope/signs`, {
+    const response = await axios.get(`${HOROSCOPE_SERVICE_URL}/api/v1/horoscope/signs`, {
       timeout: 10000,
       headers: {
         'X-Request-ID': req.id || 'unknown'
@@ -61,7 +61,7 @@ router.get('/:sign',
     try {
       const { sign } = req.params;
       
-      const response = await axios.get(`${SERVICE_URL}/api/v1/horoscope/${sign}`, {
+      const response = await axios.get(`${HOROSCOPE_SERVICE_URL}/api/v1/horoscope/${sign}`, {
         timeout: 10000,
         headers: {
           'X-Request-ID': req.id || 'unknown'
@@ -96,7 +96,7 @@ router.get('/:sign/daily',
       const params = {};
       if (date) params.date = date;
       
-      const response = await axios.get(`${SERVICE_URL}/api/v1/horoscope/${sign}/daily`, {
+      const response = await axios.get(`${HOROSCOPE_SERVICE_URL}/api/v1/horoscope/${sign}/daily`, {
         timeout: 15000,
         params,
         headers: {
@@ -132,7 +132,7 @@ router.get('/:sign/weekly',
       const params = {};
       if (week) params.week = week;
       
-      const response = await axios.get(`${SERVICE_URL}/api/v1/horoscope/${sign}/weekly`, {
+      const response = await axios.get(`${HOROSCOPE_SERVICE_URL}/api/v1/horoscope/${sign}/weekly`, {
         timeout: 15000,
         params,
         headers: {
@@ -170,7 +170,7 @@ router.get('/:sign/monthly',
       if (month) params.month = month;
       if (year) params.year = year;
       
-      const response = await axios.get(`${SERVICE_URL}/api/v1/horoscope/${sign}/monthly`, {
+      const response = await axios.get(`${HOROSCOPE_SERVICE_URL}/api/v1/horoscope/${sign}/monthly`, {
         timeout: 15000,
         params,
         headers: {
@@ -206,7 +206,7 @@ router.get('/:sign/yearly',
       const params = {};
       if (year) params.year = year;
       
-      const response = await axios.get(`${SERVICE_URL}/api/v1/horoscope/${sign}/yearly`, {
+      const response = await axios.get(`${HOROSCOPE_SERVICE_URL}/api/v1/horoscope/${sign}/yearly`, {
         timeout: 20000,
         params,
         headers: {
@@ -244,7 +244,7 @@ router.post('/:sign/analysis',
       if (question) requestData.question = question;
       if (birthInfo) requestData.birthInfo = birthInfo;
       
-      const response = await axios.post(`${SERVICE_URL}/api/v1/horoscope/${sign}/analysis`, requestData, {
+      const response = await axios.post(`${HOROSCOPE_SERVICE_URL}/api/v1/horoscope/${sign}/analysis`, requestData, {
         timeout: 30000,
         headers: {
           'X-Request-ID': req.id || 'unknown',
@@ -276,7 +276,7 @@ router.get('/compatibility/:sign1/:sign2',
     try {
       const { sign1, sign2 } = req.params;
       
-      const response = await axios.get(`${SERVICE_URL}/api/v1/horoscope/compatibility/${sign1}/${sign2}`, {
+      const response = await axios.get(`${HOROSCOPE_SERVICE_URL}/api/v1/horoscope/compatibility/${sign1}/${sign2}`, {
         timeout: 20000,
         headers: {
           'X-Request-ID': req.id || 'unknown'
@@ -314,7 +314,7 @@ router.post('/chat/analyze', [
       timestamp
     });
     
-    const response = await axios.post(`${SERVICE_URL}/api/v1/horoscope/chat/analyze`, {
+    const response = await axios.post(`${HOROSCOPE_SERVICE_URL}/api/v1/horoscope/chat/analyze`, {
       sessionId,
       question,
       timestamp
