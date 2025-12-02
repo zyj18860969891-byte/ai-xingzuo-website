@@ -86,10 +86,16 @@ router.post('/chat/analyze', [
 
   } catch (error) {
     console.error('MCP聊天分析失败:', error);
+    
+    // 当MCP服务不可用时，返回友好的错误消息
     res.json({
       success: false,
-      error: '服务异常',
-      details: error.message,
+      error: '聊天分析服务暂时不可用',
+      answer: '抱歉，我现在无法处理你的星座问题。请稍后再试或尝试其他问题。',
+      metadata: {
+        type: 'error',
+        suggestion: '你可以尝试问：我今天适合做什么？或者直接告诉我你的星座'
+      },
       question: req.body.question || '未知问题',
       timestamp: new Date().toISOString()
     });

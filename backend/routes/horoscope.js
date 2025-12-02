@@ -12,8 +12,8 @@ const { body, param, query, validationResult } = require('express-validator');
 const router = express.Router();
 
 // 服务配置
-const SERVICE_URL = process.env.HOROSCOPE_SERVICE_URL || 
-  `http://localhost:${process.env.HOROSCOPE_SERVICE_PORT || 3002}`;
+const HOROSCOPE_SERVICE_URL = process.env.HOROSCOPE_SERVICE_URL || 
+  `http://localhost:${process.env.HOROSCOPE_SERVICE_PORT || 8080}`;
 
 // 请求验证中间件
 const validateRequest = (req, res, next) => {

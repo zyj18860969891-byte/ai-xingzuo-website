@@ -722,6 +722,26 @@ async function callStarMCPStdio(question, session) {
         timestamp: new Date().toISOString()
       });
 
+      // 检查MCP服务是否可用
+      const mcpUrl = process.env.STAR_MCP_URL || 'https://mcp.api-inference.modelscope.net/7dbabf61999f4e/mcp';
+      console.log('🔍 MCP服务URL:', mcpUrl);
+      
+      // 如果没有配置MCP服务，返回友好的错误消息
+      if (!process.env.STAR_MCP_URL && !process.env.OPENROUTER_API_KEY) {
+        resolve({
+          success: false,
+          error: 'MCP服务未配置',
+          answer: '抱歉，我现在无法处理你的星座问题。请稍后再试或尝试其他问题。',
+          metadata: {
+            type: 'error',
+            suggestion: '你可以尝试问：我今天适合做什么？或者直接告诉我你的星座'
+          },
+          question: question,
+          timestamp: new Date().toISOString()
+        });
+        return;
+      }
+
       // 启动MCP服务进程
       const mcpProcess = spawn('npx', ['star-mcp'], {
         stdio: ['pipe', 'pipe', 'pipe'],
@@ -882,7 +902,18 @@ async function callStarMCPStdio(question, session) {
       });
 
       mcpProcess.on('error', (error) => {
-        reject(error);
+        console.error('❌ MCP stdio连接失败:', error.message);
+        resolve({
+          success: false,
+          error: 'MCP服务连接失败',
+          answer: '抱歉，我现在无法处理你的星座问题。请稍后再试或尝试其他问题。',
+          metadata: {
+            type: 'error',
+            suggestion: '你可以尝试问：我今天适合做什么？或者直接告诉我你的星座'
+          },
+          question: question,
+          timestamp: new Date().toISOString()
+        });
       });
 
       // 1. 初始化请求
@@ -897,7 +928,7 @@ async function callStarMCPStdio(question, session) {
         }
       };
       
-      console.log('� 发送初始化请求:', initRequest);
+      console.log('🔄 发送初始化请求:', initRequest);
       mcpProcess.stdin.write(JSON.stringify(initRequest) + '\n');
 
       // 超时处理
@@ -921,7 +952,17 @@ async function callStarMCPStdio(question, session) {
 
     } catch (error) {
       console.error('❌ MCP stdio连接失败:', error.message);
-      reject(error);
+      resolve({
+        success: false,
+        error: 'MCP服务连接失败',
+        answer: '抱歉，我现在无法处理你的星座问题。请稍后再试或尝试其他问题。',
+        metadata: {
+          type: 'error',
+          suggestion: '你可以尝试问：我今天适合做什么？或者直接告诉我你的星座'
+        },
+        question: question,
+        timestamp: new Date().toISOString()
+      });
     }
   });
 }
