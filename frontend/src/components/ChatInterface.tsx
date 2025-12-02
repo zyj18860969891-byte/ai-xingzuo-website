@@ -57,7 +57,8 @@ const ChatInterface: React.FC = () => {
     try {
       
       const response = await api.post('/v1/horoscope/chat/session');
-      const data = response.data || response;
+      // api.interceptors.response 返回 response.data，所以 response 就是数据
+      const data = response as any;
       setSessionId(data.sessionId);
       
       // 添加欢迎消息
@@ -104,7 +105,7 @@ const ChatInterface: React.FC = () => {
 
       // 处理不同类型的响应
       let botMessage: Message;
-      const data = response.data || response;
+      const data = response as any;
       
       if (data.type === 'zodiac_question') {
         // 星座询问消息
@@ -180,9 +181,9 @@ const ChatInterface: React.FC = () => {
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        content: (response.data || response).answer,
+        content: (response as any).answer,
         timestamp: new Date().toLocaleTimeString(),
-        metadata: (response.data || response).metadata
+        metadata: (response as any).metadata
       };
 
       setMessages(prev => [...prev, botMessage]);

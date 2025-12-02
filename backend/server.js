@@ -67,7 +67,7 @@ app.set('trust proxy', 1);
 
 // 服务配置
 const SERVICES = {
-  horoscope: process.env.HOROSCOPE_SERVICE_URL || `http://localhost:${process.env.HOROSCOPE_SERVICE_PORT || 3002}`,
+  horoscope: process.env.HOROSCOPE_SERVICE_URL || `http://localhost:${process.env.HOROSCOPE_SERVICE_PORT || 8080}`,
   
   // 注释掉不存在的服务
   // zodiac: process.env.ZODIAC_SERVICE_URL || `http://localhost:${process.env.ZODIAC_SERVICE_PORT || 3003}`,
