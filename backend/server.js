@@ -82,14 +82,16 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" },
 }));
 
-// 简单的 CORS 中间件
+// CORS 中间件（统一处理）
 app.use((req, res, next) => {
+  // 设置 CORS 头
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
   res.setHeader('Access-Control-Expose-Headers', 'X-Request-ID');
   res.setHeader('Access-Control-Allow-Credentials', 'false');
   
+  // OPTIONS 预检请求
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
@@ -102,15 +104,6 @@ app.use(compression());
 app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// CORS 预检请求处理
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
-});
 
 // 请求ID中间件
 app.use((req, res, next) => {
@@ -217,9 +210,9 @@ app.use((error, req, res, next) => {
   logger.error('未处理的错误:', error);
   
   // 添加 CORS 头
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
   
   // 不要在生产环境中暴露内部错误详情
   const isDevelopment = process.env.NODE_ENV === 'development';
@@ -230,15 +223,6 @@ app.use((error, req, res, next) => {
     timestamp: new Date().toISOString(),
     requestId: req.id
   });
-});
-
-// 为所有响应添加 CORS 头（强制设置）
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
-  res.setHeader('Access-Control-Allow-Credentials', 'false');
-  next();
 });
 
 // 启动服务器
