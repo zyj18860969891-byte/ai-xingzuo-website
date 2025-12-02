@@ -18,7 +18,7 @@ const router = express.Router();
 
 // 服务配置
 const HOROSCOPE_SERVICE_URL = process.env.HOROSCOPE_SERVICE_URL || 
-  `http://localhost:${process.env.HOROSCOPE_SERVICE_PORT || 3002}`;
+  `http://localhost:${process.env.HOROSCOPE_SERVICE_PORT || 8080}`;
 
 // 会话存储 (简单内存存储，生产环境建议使用Redis)
 const sessions = new Map();
