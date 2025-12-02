@@ -63,6 +63,9 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express();
 const PORT = process.env.GATEWAY_PORT || process.env.PORT || 3001;
 
+// 信任代理设置（解决 Railway 反向代理问题）
+app.set('trust proxy', 1);
+
 // 服务配置
 const SERVICES = {
   horoscope: process.env.HOROSCOPE_SERVICE_URL || `http://localhost:${process.env.HOROSCOPE_SERVICE_PORT || 3002}`,
@@ -81,14 +84,27 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:3001', 'https://ai-xingzuo-website-frontend-xqwz.vercel.app'],
-  credentials: true
+  origin: process.env.CORS_ORIGIN?.split(',') || ['*', 'http://localhost:3000', 'http://localhost:3001', 'https://ai-xingzuo-website-frontend-xqwz.vercel.app'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['X-Request-ID'],
+  maxAge: 86400
 }));
 
 app.use(compression());
 app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// CORS 预检请求处理
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200);
+});
 
 // 请求ID中间件
 app.use((req, res, next) => {
@@ -194,6 +210,11 @@ app.use('*', (req, res) => {
 app.use((error, req, res, next) => {
   logger.error('未处理的错误:', error);
   
+  // 添加 CORS 头
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  
   // 不要在生产环境中暴露内部错误详情
   const isDevelopment = process.env.NODE_ENV === 'development';
   
@@ -203,6 +224,14 @@ app.use((error, req, res, next) => {
     timestamp: new Date().toISOString(),
     requestId: req.id
   });
+});
+
+// 为所有响应添加 CORS 头
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  next();
 });
 
 // 启动服务器
