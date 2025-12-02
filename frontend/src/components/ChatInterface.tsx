@@ -57,7 +57,8 @@ const ChatInterface: React.FC = () => {
     try {
       
       const response = await api.post('/v1/horoscope/chat/session');
-      setSessionId(response.data.sessionId);
+      const data = response.data || response;
+      setSessionId(data.sessionId);
       
       // 添加欢迎消息
       const welcomeMessage: Message = {
@@ -103,19 +104,20 @@ const ChatInterface: React.FC = () => {
 
       // 处理不同类型的响应
       let botMessage: Message;
+      const data = response.data || response;
       
-      if (response.data.type === 'zodiac_question') {
+      if (data.type === 'zodiac_question') {
         // 星座询问消息
         botMessage = {
           id: (Date.now() + 1).toString(),
           type: 'bot',
-          content: response.data.question,
+          content: data.question,
           timestamp: new Date().toLocaleTimeString(),
           metadata: {
             type: 'zodiac_question',
-            followUpQuestions: response.data.followUpQuestions,
-            aiConfidence: response.data.aiConfidence,
-            aiReasoning: response.data.aiReasoning
+            followUpQuestions: data.followUpQuestions,
+            aiConfidence: data.aiConfidence,
+            aiReasoning: data.aiReasoning
           }
         };
       } else {
@@ -123,9 +125,9 @@ const ChatInterface: React.FC = () => {
         botMessage = {
           id: (Date.now() + 1).toString(),
           type: 'bot',
-          content: response.data.answer,
+          content: data.answer,
           timestamp: new Date().toLocaleTimeString(),
-          metadata: response.data.metadata
+          metadata: data.metadata
         };
       }
 
@@ -178,9 +180,9 @@ const ChatInterface: React.FC = () => {
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        content: response.data.answer,
+        content: (response.data || response).answer,
         timestamp: new Date().toLocaleTimeString(),
-        metadata: response.data.metadata
+        metadata: (response.data || response).metadata
       };
 
       setMessages(prev => [...prev, botMessage]);
